@@ -42,7 +42,9 @@ function getSize(){
 function cleans(){
     const items=document.querySelectorAll(".item");
     items.forEach(function(element){
-        element.classList.remove("active");})
+        element.classList.remove("active");
+        element.style.cssText=`--c:${hexToRgb(backColor.value)}`;
+        element.style.backgroundColor=`${hexToRgb(backColor.value)}`})
 }
 
 function drawClick(clicked){
@@ -77,12 +79,14 @@ function removeColor(event){
     if(event.type=="mouseover"){
         if(click){
             this.classList.remove("active");
-            this.style.cssText=`--c:rgb(255,255,255)`;
+            this.style.cssText=`--c:${hexToRgb(backColor.value)}`;
+            this.style.backgroundColor=`${hexToRgb(backColor.value)}`
         }
     }
     else if(event.type=="mousedown"){
         this.classList.remove("active");
-        this.style.cssText=`--c:rgb(255,255,255)`;
+        this.style.cssText=`--c:${hexToRgb(backColor.value)}`;
+        this.style.backgroundColor=`${hexToRgb(backColor.value)}`
     }
 }
 
@@ -147,6 +151,7 @@ function lighten(event){
             }
             this.classList.add("active");
             this.style.cssText=`--c:rgb(${r},${g},${b})`;
+            console.log(this.style.cssText)
          
         }  
     }
@@ -243,12 +248,23 @@ function shading(event){
     }
 }
 
-function togglegrid(){ const items=document.querySelectorAll(".item");
-items.forEach(function(element){
-    element.classList.toggle("background")
+function togglegrid(){ 
+    const items=document.querySelectorAll(".item");
+    items.forEach(function(element){
+        element.classList.toggle("background")
+    })
+    this.classList.toggle("On");
+}
 
-})
-this.classList.toggle("On");}
+function changeBackground(){
+    const items=document.querySelectorAll(".item");
+    items.forEach(function(element){
+        if(!element.classList.contains("active")){
+            element.style.cssText=`--c:${hexToRgb(backColor.value)}`;
+            element.style.backgroundColor=`${hexToRgb(backColor.value)}`
+        }
+    })
+}
 
 let click;
 const container=document.querySelector(".container");
@@ -262,6 +278,7 @@ const rand=document.querySelector(".random");
 const shadeDown=document.querySelector(".shadedown");
 const Shading=document.querySelector(".Shading");
 const gridlines=document.querySelector(".gridlines")
+const backColor=document.querySelector(".backgroundcolor")
 createpad(16);
 gridlines.addEventListener("click", togglegrid)
 size.addEventListener("change",getSize);
@@ -270,4 +287,5 @@ clean.addEventListener("click",cleans);
 rand.addEventListener("click",function (){SetAll(setRandomColor,this)})
 shadeDown.addEventListener("click",function(){SetAll(lighten, this)})
 Shading.addEventListener("click",function(){SetAll(shading, this)})
+backColor.addEventListener("change", changeBackground)
 container.ondragstart = () => {return false;};
