@@ -267,6 +267,7 @@ function changeBackground(){
 }
 
 let click;
+let getcanvas;
 const container=document.querySelector(".container");
 container.addEventListener("mousedown", () => {drawClick(true)});
 window.addEventListener("mouseup",() => {drawClick(false)});
@@ -279,6 +280,7 @@ const shadeDown=document.querySelector(".shadedown");
 const Shading=document.querySelector(".Shading");
 const gridlines=document.querySelector(".gridlines")
 const backColor=document.querySelector(".backgroundcolor")
+const save=document.querySelector(".save")
 createpad(16);
 gridlines.addEventListener("click", togglegrid)
 size.addEventListener("change",getSize);
@@ -289,3 +291,13 @@ shadeDown.addEventListener("click",function(){SetAll(lighten, this)})
 Shading.addEventListener("click",function(){SetAll(shading, this)})
 backColor.addEventListener("change", changeBackground)
 container.ondragstart = () => {return false;};
+save.addEventListener("click",function() { 
+    html2canvas(container).then(function(canvas) {
+        console.log(canvas.toDataURL("image/jpeg", 0.9));
+        canvas.toBlob(function(blob) {
+            saveAs(blob, "Canvas.png"); 
+        });
+
+    })
+    
+})
