@@ -4,7 +4,8 @@ function addcolor(event){
     if(event.type=="mouseover"){
         if(click){
             this.classList.add("active");
-            this.style.cssText=`--c:${hexToRgb(color.value)}`
+            this.style.cssText=`--c:${hexToRgb(color.value)}`;
+            console.log(color.value)
         }
     }
     else if(event.type=="mousedown"){
@@ -13,7 +14,7 @@ function addcolor(event){
     }
 }
 
-//Create grid and add eventlistener to each scuare element
+//Create grid and add eventlistener to each square element
 function createpad(rows){
     for(let i=1;i<=rows*rows;i++){
         const div=document.createElement("div");
@@ -26,12 +27,15 @@ function createpad(rows){
     }
 }
 
+//Clear the grid of all its elements
 function removeAllChildNodes(parent){
     while(parent.firstChild){
         parent.removeChild(parent.firstChild);
     }
 }
 
+/*Retrieve the size of the grid from the input erase the last grill and create a new grid with
+the updated value */
 function getSize(){
     container.style.cssText=`grid-template-rows: repeat(${size.value}, 1fr); grid-template-columns:repeat(${size.value}, 1fr);`
     removeAllChildNodes(container);
@@ -278,6 +282,47 @@ function clickbutton(){
     })
 }
 
+function getColor(){
+    let rgbvalues=this.style.cssText.split(" ")[1].split(");")[0].split("(")[1].split(",");
+
+    let r=(+rgbvalues[0]).toString(16)
+    let g=(+rgbvalues[1]).toString(16)
+    let b=(+rgbvalues[2]).toString(16)
+
+    if(r.length==1){
+        r="0"+r;
+    }
+
+    if(g.length==1){
+        g="0"+g;
+    }
+
+    if(b.length==1){
+        b="0"+b;
+    }
+
+    color.value="#"+r+g+b;
+
+}
+
+function setAllClick(){
+    const button=this
+    activeButton(button.className.split(" ")[0]);
+    const items=document.querySelectorAll(".item");
+    items.forEach(function(element){
+        if(button.classList.contains("On")){
+            element.addEventListener("mouseover",addcolor)
+            element.addEventListener("mousedown",addcolor)
+            element.removeEventListener("click",getColor);
+        }
+        else{
+            element.addEventListener("click", getColor);
+            element.removeEventListener("mouseover",addcolor)   
+            element.removeEventListener("mousedown",addcolor)}
+    })
+    button.classList.toggle("On");
+}
+
 let click;
 let getcanvas;
 const container=document.querySelector(".container");
@@ -293,6 +338,7 @@ const Shading=document.querySelector(".Shading");
 const gridlines=document.querySelector(".gridlines")
 const backColor=document.querySelector(".backgroundcolor")
 const save=document.querySelector(".save")
+const grabColor=document.querySelector(".grabcolor")
 createpad(16);
 gridlines.addEventListener("click", togglegrid)
 size.addEventListener("change",getSize);
@@ -301,13 +347,13 @@ clean.addEventListener("click",cleans);
 rand.addEventListener("click",function (){SetAll(setRandomColor,this)})
 shadeDown.addEventListener("click",function(){SetAll(lighten, this)})
 Shading.addEventListener("click",function(){SetAll(shading, this)})
+grabColor.addEventListener("click", setAllClick)
 backColor.addEventListener("change", changeBackground)
 container.ondragstart = () => {return false;};
 
 clickbutton();
 save.addEventListener("click",function() { 
     html2canvas(container).then(function(canvas) {
-        console.log(canvas.toDataURL("image/jpeg", 0.9));
         canvas.toBlob(function(blob) {
             saveAs(blob, "Canvas.png"); 
         });
