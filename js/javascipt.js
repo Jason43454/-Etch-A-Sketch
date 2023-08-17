@@ -266,6 +266,18 @@ function changeBackground(){
     })
 }
 
+function clickbutton(){
+    const options=document.querySelectorAll(".option");
+    options.forEach(function(element){
+        element.addEventListener("mousedown",function(){
+            this.classList.add("On")
+        })
+        window.addEventListener("mouseup",function(){
+            element.classList.remove("On")
+        })
+    })
+}
+
 let click;
 let getcanvas;
 const container=document.querySelector(".container");
@@ -291,6 +303,8 @@ shadeDown.addEventListener("click",function(){SetAll(lighten, this)})
 Shading.addEventListener("click",function(){SetAll(shading, this)})
 backColor.addEventListener("change", changeBackground)
 container.ondragstart = () => {return false;};
+
+clickbutton();
 save.addEventListener("click",function() { 
     html2canvas(container).then(function(canvas) {
         console.log(canvas.toDataURL("image/jpeg", 0.9));

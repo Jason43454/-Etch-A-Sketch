@@ -17,8 +17,6 @@ body{
     text-align: center;
     padding: 20px 0px;
     color: red;
-    position: sticky;
-    top: 0;
     font-weight: bold;
     font-size: 40px;
     width: 100%;
@@ -59,9 +57,10 @@ body{
     color: white;
 }
 
-.eraser, .clean, .random, .shadedown, .Shading, .gridlines, .save{
+button {
     padding: 10px 20px;
     border-radius: 0.5rem; 
+    transition: all .07s ease;
     border: none;
     margin: 10px 10px;
     width: 160px;
@@ -86,7 +85,7 @@ body{
     text-align: center;
     align-items: center;
     background-color: #202020;
-    padding: 30px;
+    padding: 40px;
 }
 
 .bottom{
