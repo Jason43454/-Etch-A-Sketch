@@ -126,3 +126,8 @@ button {
 }
 
 }
+
+/* disable the touch senstivity on the grid use it to improve mobile interface in the future
+.container div {
+    touch-action: none;
+}

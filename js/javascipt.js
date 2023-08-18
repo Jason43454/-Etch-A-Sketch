@@ -43,6 +43,7 @@ function getSize(){
     document.querySelector(".scale").textContent=`Grid size: ${size.value}x${size.value}`;
 }
 
+//Clean grid an set its color to the background color value
 function cleans(){
     const items=document.querySelectorAll(".item");
     items.forEach(function(element){
@@ -51,10 +52,12 @@ function cleans(){
         element.style.backgroundColor=`${hexToRgb(backColor.value)}`})
 }
 
+//Determine if the mouse is clicked or not
 function drawClick(clicked){
     click=clicked;
 }
 
+//Deactivate any other active drawing mode besides the one clicked by the user
 function activeButton(name){
     const buttons=document.querySelectorAll(".On");
     buttons.forEach(function (element){
@@ -64,6 +67,7 @@ function activeButton(name){
     })
 }
 
+//Tranform rgb value into hex
 function hexToRgb(hex){
     const r=parseInt(hex.slice(1,3),16)
     const g=parseInt(hex.slice(3,5),16)
@@ -71,6 +75,7 @@ function hexToRgb(hex){
     return `rgb(${r},${g},${b})`
 }
 
+//Generate a randomrgb 
 function randomrgb(){
     const r=Math.floor(Math.random()*256);
     const g=Math.floor(Math.random()*256);
@@ -79,6 +84,7 @@ function randomrgb(){
 
 }
 
+//Change the color of the selected grid elements back to the background color
 function removeColor(event){
     if(event.type=="mouseover"){
         if(click){
@@ -94,6 +100,7 @@ function removeColor(event){
     }
 }
 
+//Change the draw color to a rainbow painting each cell with a random color
 function setRandomColor(event){
     if(event.type=="mouseover"){
         if(click){
@@ -107,6 +114,7 @@ function setRandomColor(event){
     }
 }
 
+//Remove the draw function and add a new function to each grid element depending on the mode selected
 function SetAll(funct,e){
     activeButton(e.className.split(" ")[0]);
     const items=document.querySelectorAll(".item");
@@ -125,6 +133,7 @@ function SetAll(funct,e){
     e.classList.toggle("On");
 }
 
+//Add 25 to the rgb value of an element to lighten each one and if it reaches the maximun value do nothing
 function lighten(event){
     if(event.type=="mouseover"){
 
@@ -189,6 +198,7 @@ function lighten(event){
     }
 }
 
+//Substract 25 to the rgb value of an element to shade each one and if it reaches the minimum value do nothing
 function shading(event){
     if(event.type=="mouseover"){
 
@@ -252,6 +262,7 @@ function shading(event){
     }
 }
 
+//Toggle the grid elements border
 function togglegrid(){ 
     const items=document.querySelectorAll(".item");
     items.forEach(function(element){
@@ -260,6 +271,7 @@ function togglegrid(){
     this.classList.toggle("On");
 }
 
+//Update the background color for each unactive element in the grid
 function changeBackground(){
     const items=document.querySelectorAll(".item");
     items.forEach(function(element){
@@ -270,6 +282,7 @@ function changeBackground(){
     })
 }
 
+//Add click animation to the option buttons
 function clickbutton(){
     const options=document.querySelectorAll(".option");
     options.forEach(function(element){
@@ -282,6 +295,7 @@ function clickbutton(){
     })
 }
 
+//grab the color of a grid element tranform it to hex and asign it as the new draw color
 function getColor(){
     let rgbvalues=this.style.cssText.split(" ")[1].split(");")[0].split("(")[1].split(",");
 
@@ -323,11 +337,18 @@ function setAllClick(){
     button.classList.toggle("On");
 }
 
+function mobileOrDesktopGRid(){
+    if(window.innerWidth<500){
+        size.setAttribute("max","60")
+      }
+      else
+      size.setAttribute("max","100")
+}
+
+//Create all the variable needded for the page
 let click;
 let getcanvas;
 const container=document.querySelector(".container");
-container.addEventListener("mousedown", () => {drawClick(true)});
-window.addEventListener("mouseup",() => {drawClick(false)});
 const size=document.querySelector(".size");
 const erase=document.querySelector(".eraser");
 const clean=document.querySelector(".clean");
@@ -339,7 +360,10 @@ const gridlines=document.querySelector(".gridlines")
 const backColor=document.querySelector(".backgroundcolor")
 const save=document.querySelector(".save")
 const grabColor=document.querySelector(".grabcolor")
-createpad(16);
+
+//Add event listeners to each element to give them interactivity
+container.addEventListener("mousedown", () => {drawClick(true)});
+window.addEventListener("mouseup",() => {drawClick(false)});
 gridlines.addEventListener("click", togglegrid)
 size.addEventListener("change",getSize);
 erase.addEventListener("click",function (){SetAll(removeColor,this)});
@@ -351,6 +375,10 @@ grabColor.addEventListener("click", setAllClick)
 backColor.addEventListener("change", changeBackground)
 container.ondragstart = () => {return false;};
 
+//Create a 16*16 grid 
+createpad(16);
+
+//Save the drawing in a jpg format
 clickbutton();
 save.addEventListener("click",function() { 
     html2canvas(container).then(function(canvas) {
@@ -362,11 +390,6 @@ save.addEventListener("click",function() {
     
 })
 
-window.addEventListener("resize",(function(){
-    console.log(window.innerWidth)
-    if(window.innerWidth<500){
-      size.setAttribute("max","64")
-    }
-    else
-    size.setAttribute("max","100")
-}))
+//adapt the grid max size depending on the screen size
+mobileOrDesktopGRid();
+window.addEventListener("resize",mobileOrDesktopGRid)
