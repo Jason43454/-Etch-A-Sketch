@@ -361,3 +361,12 @@ save.addEventListener("click",function() {
     })
     
 })
+
+window.addEventListener("resize",(function(){
+    console.log(window.innerWidth)
+    if(window.innerWidth<500){
+      size.setAttribute("max","64")
+    }
+    else
+    size.setAttribute("max","100")
+}))
